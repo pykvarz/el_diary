@@ -11,4 +11,6 @@ def create_employee_profile(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=CustomUser)
 def save_employee_profile(sender, instance, **kwargs):
-    instance.teacherprofile.save()
+    instance.employee_profile.save()
+
+

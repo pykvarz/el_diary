@@ -13,9 +13,11 @@ class CustomUserCreationForm(UserCreationForm):
             "first_name": "Имя",
             "last_name": "Фамилия",
             "surname": "Отчество",
+            "role": "Роль",
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields.pop('password1')
-        self.fields.pop('password2')
+        self.fields['password1'].widget = forms.HiddenInput(attrs={'readonly': 'readonly'})
+        self.fields['password2'].widget = forms.HiddenInput(attrs={'readonly': 'readonly'})
+

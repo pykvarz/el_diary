@@ -1,6 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from user.manager import CustomUserManager
+
+
+def lazy_import_signal():
+    from .signals import create_employee_profile, save_employee_profile
+
 
 # Create your models here.
 
@@ -15,7 +21,7 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255, default=None, null=True)
-    role = models.CharField(max_length=255, choices=Role.choices, default=None)
+    role = models.CharField(max_length=255, choices=Role.choices, default=None, null=True)
 
     groups = models.ManyToManyField(
         "auth.Group",
@@ -29,6 +35,7 @@ class CustomUser(AbstractUser):
         blank=True,
         help_text="Specific permissions for this user.",
     )
+    objects = CustomUserManager()
 
 
 class EmployeeProfile(models.Model):
@@ -36,7 +43,7 @@ class EmployeeProfile(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         primary_key=True,
-        related_name="teacher_profile",)
+        related_name="employee_profile", )
     bio = models.DateField(blank=True, null=True)
     pob = models.CharField(max_length=100)
     GENDER_CHOICES = (
@@ -58,3 +65,5 @@ class EmployeeProfile(models.Model):
     class Meta:
         verbose_name = "Профиль сотрудника"
 
+
+lazy_import_signal()
